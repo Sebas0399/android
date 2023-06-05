@@ -8,7 +8,9 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.dispositivosmoviles.data.User
 import com.example.dispositivosmoviles.databinding.ActivityMainBinding
+import com.example.dispositivosmoviles.logic.UserValidator
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -36,10 +38,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun initClass() {
         Log.d("UCE","Entrando al onStart")
-        binding.button.setOnClickListener {
-            var intent = Intent(this, NewActivity::class.java)
-            intent.putExtra("var1",binding.buscar.text.toString())
-            startActivity(intent)
+        binding.btnLogIn.setOnClickListener {
+            if(UserValidator().validate(binding.txtUsuario.text.toString(),binding.txtPass.text.toString() )){
+                var intent = Intent(this, NewActivity::class.java)
+                intent.putExtra("var1",binding.txtUsuario.text.toString())
+                startActivity(intent)
+                }
+                else{
+                 var f= Snackbar.make(binding.btnLogIn, "matenme x2", Snackbar.LENGTH_LONG)
+
+                f.show()
+            }
+
 
             //  binding.buscar.text="hola hundo"
 
