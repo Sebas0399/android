@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.dispositivosmoviles.databinding.ActivityMainBinding
+import com.example.dispositivosmoviles.logic.validator.LoginValidator
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +35,19 @@ class MainActivity : AppCompatActivity() {
     private fun initClass() {
         Log.d("UCE","Entrando al onStart")
         binding.button.setOnClickListener {
+            if(LoginValidator().loginUser(binding.editTextTextEmailAddress.text.toString(),binding.editTextTextPassword.text.toString())){
+                var intent = Intent(this, NewActivity::class.java)
+                intent.putExtra("var1",binding.textView6.text.toString())
+                startActivity(intent)
+            }
+
+            else{
+                var f= Snackbar.make(binding.button, "Login invalido", Snackbar.LENGTH_LONG)
+
+                f.show()
+            }
+
+
            /* if(UserValidator().validate(binding.txtUsuario.text.toString(),binding.txtPass.text.toString() )){
                 var intent = Intent(this, NewActivity::class.java)
                 intent.putExtra("var1",binding.txtUsuario.text.toString())

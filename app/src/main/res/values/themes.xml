@@ -12,6 +12,14 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="styleSubtitulo">
+        <item name="android:textColor">@color/low_gray</item>
+    </style>
+    <style name="styleLabel">
+        <item name="android:textColor">@color/color_boton</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
 
 
 </resources>
