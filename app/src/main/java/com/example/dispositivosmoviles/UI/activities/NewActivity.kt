@@ -7,6 +7,7 @@ import android.util.Log
 import com.example.dispositivosmoviles.R
 import com.example.dispositivosmoviles.databinding.ActivityMainBinding
 import com.example.dispositivosmoviles.databinding.ActivityNewBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlin.math.nextDown
 
 class NewActivity : AppCompatActivity() {
@@ -29,16 +30,24 @@ class NewActivity : AppCompatActivity() {
     fun iniciar() {
         var name:String=""
         intent.extras.let {
-            name= it?.getString("var1")!!
+           // name= it?.getString("var1")!!
 
         }
-        Log.d("UCE","Hola ${name}")
-        binding.textView.text=name
-        binding.button3.setOnClickListener {
-            binding.textView.text = (Math.random() / Math.nextDown(1.0)).toString()
-            var intent = Intent(this, MainActivity::class.java)
 
-            startActivity(intent)
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+
+            when(item.itemId) {
+                R.id.item_1 -> {
+                    // Respond to navigation item 1 click
+                    Snackbar.make(binding.textView, "UwU", Snackbar.LENGTH_LONG).show()
+                    true
+                }
+                R.id.item_2 -> {
+                    // Respond to navigation item 2 click
+                    true
+                }
+                else -> false
+            }
         }
     }
 }

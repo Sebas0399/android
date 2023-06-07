@@ -3,4 +3,7 @@
     <string name="sech">Ete Sech</string>
     <string name="pepe">Cancelar</string>
     <string name="palabra1">Fast and delicious food</string>
+    <string name="text_label_1">Inicio</string>
+    <string name="text_label_2">Favoritos</string>
+    <string name="text_label_3">ChatGPT</string>
 </resources>

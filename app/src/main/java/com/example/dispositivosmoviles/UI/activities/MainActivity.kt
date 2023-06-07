@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.dispositivosmoviles.databinding.ActivityMainBinding
+import com.example.dispositivosmoviles.logic.UserValidation
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -34,17 +35,17 @@ class MainActivity : AppCompatActivity() {
     private fun initClass() {
         Log.d("UCE","Entrando al onStart")
         binding.button.setOnClickListener {
-           /* if(UserValidator().validate(binding.txtUsuario.text.toString(),binding.txtPass.text.toString() )){
+            if(UserValidation().validateLogin(binding.editTextTextEmailAddress.text.toString(),binding.editTextTextPassword.text.toString() )){
                 var intent = Intent(this, NewActivity::class.java)
-                intent.putExtra("var1",binding.txtUsuario.text.toString())
+                intent.putExtra("var1","HOLA")
                 startActivity(intent)
                 }
                 else{
-                 var f= Snackbar.make(binding.btnLogIn, "matenme x2", Snackbar.LENGTH_LONG)
+                 var f= Snackbar.make(binding.button, "matenme x2", Snackbar.LENGTH_LONG)
 
                 f.show()
             }
-*/
+
 
             //  binding.buscar.text="hola hundo"
 
