@@ -1,6 +1,6 @@
 package com.example.dispositivosmoviles.logic
 
-import com.example.dispositivosmoviles.data.MarvelHero
+import com.example.dispositivosmoviles.logic.data.MarvelHero
 
 class ListItems {
 
