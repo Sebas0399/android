@@ -3,7 +3,7 @@ package com.example.dispositivosmoviles.logic.MarveLogic
 import android.util.Log
 import com.example.dispositivosmoviles.data.conections.ApiConnection
 import com.example.dispositivosmoviles.data.endpoints.MarvelEndPoint
-import com.example.dispositivosmoviles.data.marvel.MarvelHero
+import com.example.dispositivosmoviles.logic.data.MarvelHero
 
 class MarvelHeroLogic {
     suspend fun getAllHero(name:String,limit:Int):List<MarvelHero>{
@@ -17,7 +17,7 @@ class MarvelHeroLogic {
                     if(it.comics.items.size>0){
                         commic=it.comics.items[0].name
                     }
-                    val m=MarvelHero(
+                    val m= MarvelHero(
                         it.id,
                         it.name,
                         commic,

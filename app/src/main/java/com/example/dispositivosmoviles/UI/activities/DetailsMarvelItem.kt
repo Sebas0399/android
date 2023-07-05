@@ -3,7 +3,7 @@ package com.example.dispositivosmoviles.UI.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.dispositivosmoviles.databinding.ActivityDetailsMarvelItemBinding
-import com.example.dispositivosmoviles.data.marvel.MarvelHero
+import com.example.dispositivosmoviles.logic.data.MarvelHero
 import com.squareup.picasso.Picasso
 
 class DetailsMarvelItem : AppCompatActivity() {
