@@ -53,7 +53,17 @@ class NewActivity : AppCompatActivity() {
                     transaccion.commit()
                     true
                 }
+                R.id.item_2 -> {
 
+                    // Respond to navigation item 1 click
+
+                    val transaccion=supportFragmentManager.beginTransaction()
+                    supportFragmentManager.popBackStack()
+                    transaccion.add(binding.frmContainer.id,frag2)
+                    transaccion.addToBackStack(null)
+                    transaccion.commit()
+                    true
+                }
                 else -> false
             }
         }

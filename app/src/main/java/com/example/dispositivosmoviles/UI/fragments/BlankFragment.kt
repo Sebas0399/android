@@ -66,7 +66,7 @@ class BlankFragment : Fragment() {
 
 
         // binding.listView.adapter = adapter
-
+        chargeDataRV()
         binding.rvSwipe.setOnRefreshListener {
             chargeDataRV()
             binding.rvSwipe.isRefreshing = false
