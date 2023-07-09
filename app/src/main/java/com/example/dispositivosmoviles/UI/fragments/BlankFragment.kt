@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dispositivosmoviles.UI.activities.DetailsMarvelItem
 import com.example.dispositivosmoviles.UI.adapters.MarvelAdapter
@@ -27,6 +28,7 @@ import kotlinx.coroutines.withContext
 class BlankFragment : Fragment() {
 
     private lateinit var binding: FragmentBlankBinding
+    private lateinit var gManager:GridLayoutManager
     private var marvelCharacterItems:MutableList<MarvelHero> = mutableListOf<MarvelHero>()
     private var rvAdapter: MarvelAdapter = MarvelAdapter { sendMarvelItem(it) }
     override fun onCreateView(
@@ -35,6 +37,7 @@ class BlankFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding= FragmentBlankBinding.inflate(layoutInflater,container,false)
+        gManager=GridLayoutManager(requireActivity(),2)
         return binding.root
     }
 
@@ -68,7 +71,7 @@ class BlankFragment : Fragment() {
 
 
                return@withContext withContext(Dispatchers.IO) {
-                   MarvelHeroLogic().getAllHero("spider", 5)
+                   MarvelHeroLogic().getAllMarvelHeros(0, 99)
                }
            } as MutableList<MarvelHero>
             rvAdapter=MarvelAdapter(
@@ -77,18 +80,14 @@ class BlankFragment : Fragment() {
            rvAdapter.items=marvelCharacterItems
                (binding.rvMarvel.apply {
                    this.adapter=rvAdapter
-                   this.layoutManager=LinearLayoutManager(
-                       requireActivity(),
-                       LinearLayoutManager.VERTICAL,
-                       false
-
-                   )
-               }
+                   this.layoutManager=gManager
+               })
 
            }
        }
     }
     fun sendMarvelItem(item: MarvelHero){
+
         val i= Intent(requireActivity(),DetailsMarvelItem::class.java)
         i.putExtra("name",item)
         i.putExtra("comic",item)
