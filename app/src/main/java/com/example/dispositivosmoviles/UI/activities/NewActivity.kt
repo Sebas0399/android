@@ -48,31 +48,12 @@ class NewActivity : AppCompatActivity() {
 
                     val transaccion=supportFragmentManager.beginTransaction()
                     supportFragmentManager.popBackStack()
-                    transaccion.add(binding.frm.id,frag)
+                    transaccion.add(binding.frmContainer.id,frag)
                     transaccion.addToBackStack(null)
                     transaccion.commit()
                     true
                 }
-                R.id.item_2 -> {
-                    // Respond to navigation item 2 click
 
-                    val transaccion=supportFragmentManager.beginTransaction()
-                    supportFragmentManager.popBackStack()
-                    transaccion.add(binding.frm2.id,frag2)
-                    transaccion.addToBackStack(null)
-                    transaccion.commit()
-                    true
-                }
-                R.id.item_3 -> {
-                    // Respond to navigation item 2 click
-
-                    val transaccion=supportFragmentManager.beginTransaction()
-                    supportFragmentManager.popBackStack()
-                    transaccion.add(binding.frm3.id,frag3)
-                    transaccion.addToBackStack(null)
-                    transaccion.commit()
-                    true
-                }
                 else -> false
             }
         }
