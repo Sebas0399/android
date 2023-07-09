@@ -1,5 +1,6 @@
 package com.example.dispositivosmoviles.UI.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ class MarvelAdapter(private  val items:List<MarvelHero>, private var fnClick:(Ma
         private var binding:MarvelCharactersBinding=MarvelCharactersBinding.bind(view)
         fun render(item: MarvelHero, fnClick: (MarvelHero) -> Unit){
             Picasso.get().load(item.foto).into(binding.imgMarvel)
+
             binding.txtTituloMarvel.text=item.nombre
             binding.txtComicMarvel.text=item.comic
            /* binding.tarjeta.setOnClickListener{
@@ -26,12 +28,12 @@ class MarvelAdapter(private  val items:List<MarvelHero>, private var fnClick:(Ma
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarvelAdapter.MarvelViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarvelViewHolder {
         val inflater=LayoutInflater.from(parent.context)
         return MarvelViewHolder(inflater.inflate(R.layout.marvel_characters,parent,false))
     }
 
-    override fun onBindViewHolder(holder: MarvelAdapter.MarvelViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MarvelViewHolder, position: Int) {
         holder.render(items[position],fnClick)
     }
 

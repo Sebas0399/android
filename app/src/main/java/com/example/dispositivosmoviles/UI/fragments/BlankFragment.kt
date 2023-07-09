@@ -46,11 +46,7 @@ class BlankFragment : Fragment() {
             false
 
         )*/
-        chargeDataRV()
-        binding.rvSwipe.setOnRefreshListener {
-            chargeDataRV()
-            binding.rvSwipe.isRefreshing=false
-        }
+
     }
     fun chargeDataRV(){
        lifecycleScope.launch(Dispatchers.IO){
