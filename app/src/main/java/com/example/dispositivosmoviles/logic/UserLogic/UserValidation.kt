@@ -1,4 +1,4 @@
-package com.example.dispositivosmoviles.logic
+package com.example.dispositivosmoviles.logic.UserLogic
 
 import com.example.dispositivosmoviles.data.user.UserLogin
 

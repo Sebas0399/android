@@ -14,7 +14,8 @@ import com.squareup.picasso.Picasso
 class MarvelAdapter(
 
 
-    private var fnClick: (MarvelHero) -> Unit
+    private var fnClick: (MarvelHero) -> Unit,
+    private var fnSave: (MarvelHero) -> Boolean
 ) :
 
     RecyclerView.Adapter<MarvelAdapter.MarvelViewHolder>() {
@@ -26,7 +27,8 @@ class MarvelAdapter(
 
         fun render(
             item: MarvelHero,
-            fnClick: (MarvelHero) -> Unit
+            fnClick: (MarvelHero) -> Unit,
+            fnSave: (MarvelHero) -> Boolean
         ) {
             binding.txtTituloMarvel.text = item.nombre
             binding.txtComicMarvel.text = item.comic
@@ -37,7 +39,11 @@ class MarvelAdapter(
 
             itemView.setOnClickListener {
                 fnClick(item)
-            }
+                }
+            //boton vista marvel chars
+          //  binding.b{
+            //    fnSave(item)
+            //}
 
 
         }
@@ -60,7 +66,7 @@ class MarvelAdapter(
     }
 
     override fun onBindViewHolder(holder: MarvelAdapter.MarvelViewHolder, position: Int) {
-        holder.render(items[position], fnClick)
+        holder.render(items[position], fnClick,fnSave)
     }
 
     override fun getItemCount(): Int = items.size

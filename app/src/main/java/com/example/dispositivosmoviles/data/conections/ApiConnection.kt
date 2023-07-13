@@ -6,9 +6,11 @@ import retrofit2.create
 
 class ApiConnection {
     enum class TypeApi{
-        Jikan,Marvel
+        Pokemon,Marvel
     }
     private val API_MARVEL="https://gateway.marvel.com/v1/public/"
+    private val API_POKEMON="https://pokeapi.co/api/v2/"
+
     fun getConnection(base:String): Retrofit{
         var retrofit=Retrofit.Builder()
             .baseUrl(base)
@@ -21,6 +23,9 @@ class ApiConnection {
         when(api.name){
             TypeApi.Marvel.name->{
                 BASE=API_MARVEL
+            }
+            TypeApi.Pokemon.name->{
+                BASE=API_POKEMON
             }
         }
         return  getConnection(BASE).create(service)

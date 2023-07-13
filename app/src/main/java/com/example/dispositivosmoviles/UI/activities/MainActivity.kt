@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.dispositivosmoviles.databinding.ActivityMainBinding
-import com.example.dispositivosmoviles.logic.UserValidation
+import com.example.dispositivosmoviles.logic.UserLogic.UserValidation
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {

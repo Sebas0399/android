@@ -35,7 +35,7 @@ class BlankFragment2 : Fragment() {
     private lateinit var lmanager: LinearLayoutManager
     private var marvelCharacterItems: MutableList<MarvelHero> = mutableListOf<MarvelHero>()
     private lateinit var progressBar: ProgressBar
-    private  var rvAdapter: MarvelAdapter = MarvelAdapter { sendMarvelItems(it) }
+    private lateinit var rvAdapter: MarvelAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,6 +45,20 @@ class BlankFragment2 : Fragment() {
         lmanager =LinearLayoutManager(
             requireActivity(), LinearLayoutManager.VERTICAL, false
         )
+        binding.rvMarvel.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0) {
+                        val v = lmanager.childCount
+                        val p = lmanager.findFirstVisibleItemPosition()
+                        val t = lmanager.itemCount
+                        Log.d("bur",v.toString())
+                        Log.d("bur",p.toString())
+                        Log.d("bur",t.toString())   }
+                }
+            }
+                )
         progressBar = binding.progressBar
         return binding.root
     }

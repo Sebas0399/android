@@ -2,7 +2,9 @@ package com.example.dispositivosmoviles.logic.MarveLogic
 
 import android.util.Log
 import com.example.dispositivosmoviles.data.conections.ApiConnection
+import com.example.dispositivosmoviles.data.dao.marvel.MarvelHeroDAO
 import com.example.dispositivosmoviles.data.endpoints.MarvelEndPoint
+import com.example.dispositivosmoviles.data.entities.marvel.database.MarvelHeroDB
 import com.example.dispositivosmoviles.data.entities.marvel.getMarvelHeros
 import com.example.dispositivosmoviles.logic.data.MarvelHero
 
@@ -29,7 +31,7 @@ class MarvelHeroLogic {
         val itemList= arrayListOf<MarvelHero>()
         var call=ApiConnection().getService(ApiConnection.TypeApi.Marvel,MarvelEndPoint::class.java)
         if(call!=null){
-            var response=call.getAllMarvelChars(offset ,limit)
+            var response=call.getAllMarvelChars(limit ,offset)
             if(response.isSuccessful){
                 response.body()!!.data.results.forEach{
                     val m=it.getMarvelHeros()

@@ -14,7 +14,7 @@ interface MarvelHeroDAO
     @Query("select * from MarvelHeroDB where id=:id")
     fun getOneCharacter(id:Int):List<MarvelHeroDB>
     @Insert
-    fun insertCharacter(ch:List<MarvelHeroDB>):List<MarvelHeroDB>
+    fun insertCharacter(ch:List<MarvelHeroDB>)
     @Query("select * from MarvelHeroDB where id=:id")
     fun deleteCharacter(id:Int):List<MarvelHeroDB>
     @Query("select * from MarvelHeroDB where id=:id")
