@@ -1,6 +1,5 @@
 package com.example.dispositivosmoviles.logic.MarveLogic
 
-import com.example.dispositivosmoviles.data.conections.MarvelConnectionDB_Impl
 import com.example.dispositivosmoviles.data.entities.marvel.database.MarvelHeroDB
 import com.example.dispositivosmoviles.data.utilities.DispositivosMoviles
 import com.example.dispositivosmoviles.logic.data.MarvelHero

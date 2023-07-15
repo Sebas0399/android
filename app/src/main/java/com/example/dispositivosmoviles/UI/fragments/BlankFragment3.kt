@@ -1,26 +1,19 @@
 package com.example.dispositivosmoviles.UI.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.dispositivosmoviles.R
-import com.example.dispositivosmoviles.UI.activities.DetailsMarvelItem
-import com.example.dispositivosmoviles.UI.adapters.MarvelAdapter
 import com.example.dispositivosmoviles.UI.adapters.PokemonAdapter
-import com.example.dispositivosmoviles.databinding.FragmentBlank2Binding
 import com.example.dispositivosmoviles.databinding.FragmentBlank3Binding
-import com.example.dispositivosmoviles.logic.MarveLogic.MarvelHeroLogic
 import com.example.dispositivosmoviles.logic.PokemonLogic.PokemonPetLogic
-import com.example.dispositivosmoviles.logic.data.MarvelHero
 import com.example.dispositivosmoviles.logic.data.PokemonPet
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +38,7 @@ class BlankFragment3 : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding= FragmentBlank3Binding.inflate(layoutInflater,container,false)
 
@@ -74,6 +67,7 @@ class BlankFragment3 : Fragment() {
     }
     override fun onStart() {
         super.onStart()
+        chargeDataRVAll()
         binding.txtBucar.addTextChangedListener{filteredText->
 
             Log.d("PROBANDO",filteredText.toString())
@@ -85,12 +79,7 @@ class BlankFragment3 : Fragment() {
             else{
                 reset()
             }
-//            val newItems= marvelCharacterItems.filter {
-//                    items->
-//                items.nombre.lowercase(). contains(filteredText.toString().lowercase())
-//
-//            }
-//
+
 
         }
     }
@@ -119,6 +108,40 @@ class BlankFragment3 : Fragment() {
 
 
                 listOf(PokemonPetLogic().getOnePokemon (nombre))
+
+
+
+            binding.rvPokemon.apply{
+                this.adapter = rvAdapter
+                //  this.layoutManager = lmanager
+                this.layoutManager = lmanager
+            }
+            progressBar.visibility = View.GONE
+
+
+
+        }
+    }
+    private fun chargeDataRVAll() {
+
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            progressBar.visibility = View.VISIBLE
+            pokemonPetItems= withContext(Dispatchers.IO){
+                return@withContext (PokemonPetLogic().getAllPokemonPets(99,0)
+
+
+                        )
+            } as MutableList<PokemonPet>
+            if(pokemonPetItems.size==0){
+                var f= Snackbar.make(binding.txtBucar, "No se encontro", Snackbar.LENGTH_LONG)
+
+                f.show()
+            }
+            rvAdapter.items =
+
+
+                (PokemonPetLogic().getAllPokemonPets(99,0))
 
 
 

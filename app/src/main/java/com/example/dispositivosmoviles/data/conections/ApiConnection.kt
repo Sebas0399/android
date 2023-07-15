@@ -2,7 +2,6 @@ package com.example.dispositivosmoviles.data.conections
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 class ApiConnection {
     enum class TypeApi{
@@ -11,12 +10,12 @@ class ApiConnection {
     private val API_MARVEL="https://gateway.marvel.com/v1/public/"
     private val API_POKEMON="https://pokeapi.co/api/v2/"
 
-    fun getConnection(base:String): Retrofit{
-        var retrofit=Retrofit.Builder()
+    fun getConnection(base: String): Retrofit {
+
+        return Retrofit.Builder()
             .baseUrl(base)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        return retrofit
     }
     suspend fun <T,E:Enum<E>>getService(api:E,service:Class<T>):T{
         var BASE=""

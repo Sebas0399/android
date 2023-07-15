@@ -1,17 +1,13 @@
 package com.example.dispositivosmoviles.UI.adapters
 
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dispositivosmoviles.R
-import com.example.dispositivosmoviles.logic.data.MarvelHero
-import com.example.dispositivosmoviles.databinding.MarvelCharactersBinding
 import com.example.dispositivosmoviles.databinding.PokemonPetsBinding
 import com.example.dispositivosmoviles.logic.data.PokemonPet
-
 import com.squareup.picasso.Picasso
 
 class PokemonAdapter(
@@ -54,7 +50,7 @@ class PokemonAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PokemonAdapter.PokemonViewHolder {
+    ): PokemonViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return PokemonViewHolder(
             inflater.inflate(
@@ -64,7 +60,7 @@ class PokemonAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: PokemonAdapter.PokemonViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         holder.render(items[position], fnClick)
     }
 

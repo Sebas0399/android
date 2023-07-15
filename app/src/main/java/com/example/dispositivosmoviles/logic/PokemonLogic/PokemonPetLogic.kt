@@ -15,8 +15,10 @@ class PokemonPetLogic {
         if(call!=null){
             var response=call.getPokemon(name)
             if(response.isSuccessful){
-                m=PokemonPet(response.body()!!.id,response.body()!!.name,response.body()!!.types.size.toString(),response.body()!!.sprites.other.dream_world.front_default)
+                Log.d("RESPUESTA_ONE",response.toString())
 
+                m=PokemonPet(response.body()!!.id,response.body()!!.name,response.body()!!.types.size.toString(),response.body()!!.sprites.other.dream_world.front_default)
+                Log.d("RESPUESTA_ONE",m.toString())
 
             }
             else{
@@ -31,17 +33,23 @@ class PokemonPetLogic {
         var call= ApiConnection().getService(ApiConnection.TypeApi.Pokemon, PokemonEndPoint::class.java)
         if(call!=null){
             var response=call.getAllPokemons(limit ,offset)
+            Log.d("RESPUESTA_ALL",response.toString())
+
             if(response.isSuccessful){
                 response.body()!!.results
                     .forEach{
-                    val m=getOnePokemon(it.name)
-                    itemList.add(m)
+                        Log.d("RESPUESTA_ALL",itemList.toString())
+
+                        val m=getOnePokemon(it.name)
+
+                        itemList.add(m)
                 }
             }
             else{
                 Log.d("UCE",response.toString())
             }
         }
+        Log.d("RESPUESTA_ALL",itemList.toString())
         return itemList
     }
 }
