@@ -1,5 +1,6 @@
 package com.example.dispositivosmoviles.UI.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dispositivosmoviles.UI.activities.DetailsPokeItem
 import com.example.dispositivosmoviles.UI.adapters.PokemonAdapter
 import com.example.dispositivosmoviles.databinding.FragmentBlank3Binding
 import com.example.dispositivosmoviles.logic.PokemonLogic.PokemonPetLogic
@@ -33,7 +35,7 @@ class BlankFragment3 : Fragment() {
     private lateinit var lmanager: LinearLayoutManager
     private var pokemonPetItems: MutableList<PokemonPet> = mutableListOf<PokemonPet>()
     private lateinit var progressBar: ProgressBar
-    private var rvAdapter: PokemonAdapter = PokemonAdapter { sendPokemonItems(it) }
+    private var rvAdapter: PokemonAdapter = PokemonAdapter { sendPokeItems(it) }
     private var offset=0
     private val limit=20
     override fun onCreateView(
@@ -54,21 +56,19 @@ class BlankFragment3 : Fragment() {
                         val v = lmanager.childCount
                         val p = lmanager.findFirstVisibleItemPosition()
                         val t = lmanager.itemCount
-                        Log.d("bur", v.toString())
-                        Log.d("bur", p.toString())
-                        Log.d("bur", t.toString())
+
                         if ((v + p) >= t) {
                             lifecycleScope.launch((Dispatchers.IO)) {
-                                Log.d("offset",offset.toString())
 
-                                val items = PokemonPetLogic().getAllPokemonPets(limit,offset)
-                                /* val newItems = MarvelLogic().getAllCharacters(
-                                     name="cap" ,
-                                     5)*/
+
                                 withContext(Dispatchers.Main) {
+                                    this@BlankFragment3.offset+=limit
+                                    val items = PokemonPetLogic().getAllPokemonPets(limit,offset)
+                                    Log.d("offset",items.toString())
+
                                     rvAdapter.updateListItems(items)
-                                    this@BlankFragment3.offset+=1
-                                    Log.d("offset",offset.toString())
+
+
                                 }
 
 
@@ -82,8 +82,11 @@ class BlankFragment3 : Fragment() {
         return binding.root
     }
 
-    fun sendPokemonItems(item: PokemonPet) {
-        Log.d("Pokemon", item.nombre)
+    fun sendPokeItems(item: PokemonPet) {
+
+        val i = Intent(requireActivity(), DetailsPokeItem::class.java)
+        i.putExtra("name", item)
+        startActivity(i)
     }
 
     override fun onStart() {
@@ -154,7 +157,7 @@ class BlankFragment3 : Fragment() {
         lifecycleScope.launch(Dispatchers.Main) {
             progressBar.visibility = View.VISIBLE
             pokemonPetItems = withContext(Dispatchers.IO) {
-                return@withContext (PokemonPetLogic().getAllPokemonPets(10, 0)
+                return@withContext (PokemonPetLogic().getAllPokemonPets(limit, offset)
 
 
                         )
@@ -167,7 +170,7 @@ class BlankFragment3 : Fragment() {
             rvAdapter.items =
 
 
-                (PokemonPetLogic().getAllPokemonPets(10, 0))
+                (PokemonPetLogic().getAllPokemonPets(limit, offset))
 
 
 

@@ -95,6 +95,21 @@ class PokemonPetLogicDB {
         }
         DispositivosMoviles.getDbInstance().pokemonDao().insertAllCharacter(itemsDB)
     }
+    suspend fun insertPokemonPetDB(item:PokemonPet){
+        var PokemonPetData=
+
+
+
+                PokemonPetDB(
+                    item.id,
+                    item.nombre,
+                    item.tipos,
+                    item.foto
+                )
+
+
+        DispositivosMoviles.getDbInstance().pokemonDao().insertOneCharacter(PokemonPetData)
+    }
     suspend fun getInitChars():MutableList<PokemonPet>{
         var items= mutableListOf<PokemonPet>()
         try {
