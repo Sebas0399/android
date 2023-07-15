@@ -7,7 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.ProgressBar
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -16,14 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dispositivosmoviles.Metodos
 
-import com.example.dispositivosmoviles.R
-import com.example.dispositivosmoviles.UI.activities.DetailsMarvelItem
-import com.example.dispositivosmoviles.UI.adapters.MarvelAdapter
-import com.example.dispositivosmoviles.data.utilities.DispositivosMoviles
+import com.example.dispositivosmoviles.UI.activities.DetailsPokeItem
+import com.example.dispositivosmoviles.UI.adapters.PokemonAdapter
 import com.example.dispositivosmoviles.databinding.FragmentBlankBinding
-import com.example.dispositivosmoviles.logic.MarveLogic.MarvelHeroLogic
-import com.example.dispositivosmoviles.logic.MarveLogic.MarvelHeroLogicDB
-import com.example.dispositivosmoviles.logic.data.MarvelHero
+import com.example.dispositivosmoviles.logic.PokemonLogic.PokemonPetLogic
+import com.example.dispositivosmoviles.logic.PokemonLogic.PokemonPetLogicDB
+import com.example.dispositivosmoviles.logic.data.PokemonPet
 import com.google.android.material.snackbar.Snackbar
 
 import kotlinx.coroutines.Dispatchers
@@ -42,11 +40,12 @@ class BlankFragment : Fragment() {
     private lateinit var lmanager: LinearLayoutManager
     private lateinit var gmanager: GridLayoutManager
 
-    private var marvelCharacterItems: MutableList<MarvelHero> = mutableListOf<MarvelHero>()
+    private var pokemonPetItems: MutableList<PokemonPet> = mutableListOf()
+    private lateinit var progressBar: ProgressBar
 
-    private lateinit var rvAdapter: MarvelAdapter // MarvelAdapter { sendMarvelItems(it) }
+    private  var rvAdapter: PokemonAdapter =PokemonAdapter  { sendPokeItems(it)}
     private var offset=0
-    private val limit=99
+    private val limit=20
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,16 +61,18 @@ class BlankFragment : Fragment() {
         gmanager = GridLayoutManager(
             requireActivity(), 2
         )
+        progressBar = binding.progressBar
+
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        val names = arrayListOf<String>("Carlos", "Juan", "Xavier", "Andres", "Pepe", "Antonio")
-
-
         // binding.listView.adapter = adapter
-        chargeDataRVAPI(limit, offset)
+        if(pokemonPetItems.isEmpty()){
+            chargeDataRVAPI(limit, offset)
+
+        }
         binding.rvSwipe.setOnRefreshListener {
             chargeDataRVAPI(limit,offset)
             binding.rvSwipe.isRefreshing = false
@@ -91,7 +92,7 @@ class BlankFragment : Fragment() {
 
                         if ((v + p) >= t) {
                             lifecycleScope.launch((Dispatchers.IO)) {
-                                val items = MarvelHeroLogic().getAllMarvelHeros(offset,limit)
+                                val items = PokemonPetLogic().getAllPokemonPets(limit,offset)
                                 /* val newItems = MarvelLogic().getAllCharacters(
                                      name="cap" ,
                                      5)*/
@@ -110,7 +111,7 @@ class BlankFragment : Fragment() {
 
             })
         binding.txtfilter.addTextChangedListener { filteredText ->
-            val newItems = marvelCharacterItems.filter { items ->
+            val newItems = pokemonPetItems.filter { items ->
                 items.nombre.lowercase().contains(filteredText.toString().lowercase())
 
             }
@@ -122,9 +123,9 @@ class BlankFragment : Fragment() {
 
     //se va a aenviar como parametro en el adaptador
 
-    fun sendMarvelItems(item: MarvelHero) {
+    fun sendPokeItems(item: PokemonPet) {
 
-        val i = Intent(requireActivity(), DetailsMarvelItem::class.java)
+        val i = Intent(requireActivity(), DetailsPokeItem::class.java)
         i.putExtra("name", item)
         startActivity(i)
     }
@@ -134,15 +135,15 @@ class BlankFragment : Fragment() {
 
 
         lifecycleScope.launch(Dispatchers.Main) {
-            marvelCharacterItems = withContext(Dispatchers.IO) {
-                return@withContext (MarvelHeroLogic().getAllMarvelHeros(
-                    0, 99
+            pokemonPetItems = withContext(Dispatchers.IO) {
+                return@withContext (PokemonPetLogic().getAllPokemonPets(
+                    20, 0
 
 
                 ))
-            } as MutableList<MarvelHero>
+            } as MutableList<PokemonPet>
 
-            rvAdapter.items = marvelCharacterItems
+            rvAdapter.items = pokemonPetItems
 
 
             //JikanAnimeLogic().getAllAnimes()
@@ -171,11 +172,13 @@ class BlankFragment : Fragment() {
 
 
             lifecycleScope.launch(Dispatchers.Main) {
-                marvelCharacterItems = withContext(Dispatchers.IO) {
+                progressBar.visibility = View.VISIBLE
 
-                    return@withContext MarvelHeroLogicDB().getInitChars()
+                pokemonPetItems = withContext(Dispatchers.IO) {
+
+                    return@withContext PokemonPetLogicDB().getInitChars()
                 }
-                rvAdapter.items = marvelCharacterItems
+                rvAdapter.items = pokemonPetItems
 
 
 
@@ -184,6 +187,8 @@ class BlankFragment : Fragment() {
                     //  this.layoutManager = lmanager
                     this.layoutManager = gmanager
                 }
+                progressBar.visibility = View.GONE
+
 
 
             }
@@ -202,11 +207,13 @@ class BlankFragment : Fragment() {
 
 
             lifecycleScope.launch(Dispatchers.Main) {
-                marvelCharacterItems = withContext(Dispatchers.IO) {
+                progressBar.visibility = View.VISIBLE
 
-                    return@withContext (MarvelHeroLogic().getAllMarvelHeros(limit,offset) as MutableList<MarvelHero>)
+                pokemonPetItems = withContext(Dispatchers.IO) {
+
+                    return@withContext (PokemonPetLogic().getAllPokemonPets(limit,offset) as MutableList<PokemonPet>)
                 }
-                rvAdapter.items = marvelCharacterItems
+                rvAdapter.items = pokemonPetItems
 
 
 
@@ -215,6 +222,8 @@ class BlankFragment : Fragment() {
                     //  this.layoutManager = lmanager
                     this.layoutManager = gmanager
                 }
+                progressBar.visibility = View.GONE
+
 
 
             }

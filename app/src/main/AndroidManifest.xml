@@ -18,7 +18,7 @@
         android:theme="@style/Theme.DispositivosMoviles"
         tools:targetApi="31">
         <activity
-            android:name=".UI.activities.DetailsMarvelItem"
+            android:name=".UI.activities.DetailsPokeItem"
             android:exported="false" />
         <activity
             android:name=".UI.activities.MainActivity"

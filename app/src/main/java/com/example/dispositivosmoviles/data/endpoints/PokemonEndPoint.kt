@@ -5,12 +5,13 @@ import com.example.dispositivosmoviles.data.entities.pokemon.PokemonApiChars
 import com.example.dispositivosmoviles.data.entities.pokemon.PokemonApiCharsAll
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PokemonEndPoint {
-    @GET("pokemon/")
+    @GET("pokemon/{name}")
     suspend fun getPokemon(
-        @Query("name")name:String,
+        @Path("name")name:String,
     ):Response<PokemonApiChars>
     @GET("pokemon")
     suspend fun getAllPokemons(

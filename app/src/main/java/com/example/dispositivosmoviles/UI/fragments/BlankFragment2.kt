@@ -12,11 +12,9 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.dispositivosmoviles.R
-import com.example.dispositivosmoviles.UI.activities.DetailsMarvelItem
+import com.example.dispositivosmoviles.UI.activities.DetailsPokeItem
 import com.example.dispositivosmoviles.UI.adapters.MarvelAdapter
 import com.example.dispositivosmoviles.databinding.FragmentBlank2Binding
-import com.example.dispositivosmoviles.databinding.FragmentBlankBinding
 import com.example.dispositivosmoviles.logic.MarveLogic.MarvelHeroLogic
 import com.example.dispositivosmoviles.logic.data.MarvelHero
 import com.google.android.material.snackbar.Snackbar
@@ -91,7 +89,7 @@ class BlankFragment2 : Fragment() {
     }
     fun sendMarvelItems(item: MarvelHero) {
 
-        val i = Intent(requireActivity(), DetailsMarvelItem::class.java)
+        val i = Intent(requireActivity(), DetailsPokeItem::class.java)
         i.putExtra("name", item)
         startActivity(i)
     }

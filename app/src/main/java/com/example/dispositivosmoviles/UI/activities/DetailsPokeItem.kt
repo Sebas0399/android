@@ -4,9 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.dispositivosmoviles.databinding.ActivityDetailsMarvelItemBinding
 import com.example.dispositivosmoviles.logic.data.MarvelHero
+import com.example.dispositivosmoviles.logic.data.PokemonPet
 import com.squareup.picasso.Picasso
 
-class DetailsMarvelItem : AppCompatActivity() {
+class DetailsPokeItem : AppCompatActivity() {
     private lateinit var binding: ActivityDetailsMarvelItemBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,10 +17,10 @@ class DetailsMarvelItem : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val item=intent.getParcelableExtra<MarvelHero>("name")
+        val item=intent.getParcelableExtra<PokemonPet>("name")
         if(item!=null){
             binding.textoMarvel.text=item.nombre
-            binding.comicMarvel.text=item.comic
+            binding.comicMarvel.text=item.tipos
             Picasso.get().load(item.foto).into(binding.imagenMarvel)
 
 

@@ -25,35 +25,24 @@
 
 
        >
+
       <ImageView
           android:layout_width="match_parent"
           android:layout_height="205dp"
 
-          />
+          app:srcCompat="@drawable/poke_banner" />
 
       <TextView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:gravity="bottom|center"
-          android:text="@string/hello_blank_fragment"
+          android:text="Mira tus pokemons"
 
           android:textSize="30sp"
           android:textStyle="bold"
 
           />
    </androidx.cardview.widget.CardView>
-
-   <Spinner
-       android:id="@+id/spinner"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_margin="25dp"
-
-       android:layout_marginTop="8dp"
-       app:layout_constraintEnd_toEndOf="parent"
-
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toBottomOf="@id/card" />
 
    <LinearLayout
        android:id="@+id/listView"
@@ -66,32 +55,36 @@
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintStart_toStartOf="parent"
 
-       app:layout_constraintTop_toBottomOf="@+id/spinner"
-       app:layout_constraintVertical_bias="0.0">
+       >
 
       <EditText
           android:id="@+id/txtfilter"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:textColor="@color/white"
-          android:textSize="14sp"
+          android:imeOptions="actionDone"
           android:maxLines="1"
           android:singleLine="true"
-          android:imeOptions="actionDone"
+          android:textColor="@color/white"
+          android:textSize="14sp"
 
           />
-
+      <ProgressBar
+          android:id="@+id/progressBar"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
+          android:layout_gravity="center"
+          android:visibility="gone" />
       <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
           android:id="@+id/rvSwipe"
           android:layout_width="match_parent"
-          android:layout_height="375dp">
+          android:layout_height="match_parent">
 
 
          <androidx.recyclerview.widget.RecyclerView
              android:id="@+id/rvMarvel"
 
              android:layout_width="match_parent"
-             android:layout_height="wrap_content"
+             android:layout_height="match_parent"
 
              />
       </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
