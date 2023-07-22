@@ -1,5 +1,6 @@
 package com.example.dispositivosmoviles.UI.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dispositivosmoviles.UI.activities.DetailsPokeItem
 import com.example.dispositivosmoviles.UI.adapters.PokemonAdapter
 import com.example.dispositivosmoviles.databinding.FragmentBlank3Binding
 import com.example.dispositivosmoviles.logic.PokemonLogic.PokemonPetLogic
@@ -83,7 +85,9 @@ class BlankFragment3 : Fragment() {
     }
 
     fun sendPokemonItems(item: PokemonPet) {
-        Log.d("Pokemon", item.nombre)
+        val i = Intent(requireActivity(), DetailsPokeItem::class.java)
+        i.putExtra("name", item)
+        startActivity(i)
     }
 
     override fun onStart() {

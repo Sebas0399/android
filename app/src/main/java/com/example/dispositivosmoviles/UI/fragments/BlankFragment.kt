@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.widget.addTextChangedListener
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dispositivosmoviles.Metodos
 
 import com.example.dispositivosmoviles.UI.activities.DetailsPokeItem
+import com.example.dispositivosmoviles.UI.activities.dataStore
 import com.example.dispositivosmoviles.UI.adapters.PokemonAdapter
+import com.example.dispositivosmoviles.data.user.UserDataStore
 import com.example.dispositivosmoviles.databinding.FragmentBlankBinding
 import com.example.dispositivosmoviles.logic.PokemonLogic.PokemonPetLogic
 import com.example.dispositivosmoviles.logic.PokemonLogic.PokemonPetLogicDB
@@ -25,6 +28,7 @@ import com.example.dispositivosmoviles.logic.data.PokemonPet
 import com.google.android.material.snackbar.Snackbar
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -43,9 +47,9 @@ class BlankFragment : Fragment() {
     private var pokemonPetItems: MutableList<PokemonPet> = mutableListOf()
     private lateinit var progressBar: ProgressBar
 
-    private  var rvAdapter: PokemonAdapter =PokemonAdapter  { sendPokeItems(it)}
-    private var offset=0
-    private val limit=20
+    private var rvAdapter: PokemonAdapter = PokemonAdapter { sendPokeItems(it) }
+    private var offset = 0
+    private val limit = 20
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,13 +72,25 @@ class BlankFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        lifecycleScope.launch(Dispatchers.Main) {
+            getDataStore().collect(){
+                user->
+                Log.d("UCE",user.name)
+                Log.d("UCE",user.email)
+                Log.d("UCE",user.session)
+            }
+        }
+        binding.rvSwipe.setOnRefreshListener {
+            chargeDataRVDB()
+            binding.rvSwipe.isRefreshing = false
+        }
         // binding.listView.adapter = adapter
-        if(pokemonPetItems.isEmpty()){
+       /* if (pokemonPetItems.isEmpty()) {
             chargeDataRVAPI(limit, offset)
 
         }
         binding.rvSwipe.setOnRefreshListener {
-            chargeDataRVAPI(limit,offset)
+            chargeDataRVAPI(limit, offset)
             binding.rvSwipe.isRefreshing = false
         }
         binding.rvMarvel.addOnScrollListener(
@@ -86,20 +102,20 @@ class BlankFragment : Fragment() {
                         val v = lmanager.childCount
                         val p = lmanager.findFirstVisibleItemPosition()
                         val t = lmanager.itemCount
-                        Log.d("bur",v.toString())
-                        Log.d("bur",p.toString())
-                        Log.d("bur",t.toString())
+                        Log.d("bur", v.toString())
+                        Log.d("bur", p.toString())
+                        Log.d("bur", t.toString())
 
                         if ((v + p) >= t) {
                             lifecycleScope.launch((Dispatchers.IO)) {
-                                val items = PokemonPetLogic().getAllPokemonPets(limit,offset)
+                                val items = PokemonPetLogic().getAllPokemonPets(limit, offset)
                                 /* val newItems = MarvelLogic().getAllCharacters(
                                      name="cap" ,
                                      5)*/
                                 withContext(Dispatchers.Main) {
                                     rvAdapter.updateListItems(items)
-                                    this@BlankFragment.offset+=offset
-                                    Log.d("offset",offset.toString())
+                                    this@BlankFragment.offset += offset
+                                    Log.d("offset", offset.toString())
                                 }
 
 
@@ -109,15 +125,17 @@ class BlankFragment : Fragment() {
 
                 }
 
-            })
-        binding.txtfilter.addTextChangedListener { filteredText ->
+            })*/
+       /* binding.txtfilter.addTextChangedListener { filteredText ->
             val newItems = pokemonPetItems.filter { items ->
                 items.nombre.lowercase().contains(filteredText.toString().lowercase())
 
             }
 
             rvAdapter.replaceListAdapter(newItems)
-        }
+        }*/
+        chargeDataRVDB()
+
 
     }
 
@@ -159,7 +177,7 @@ class BlankFragment : Fragment() {
             binding.rvMarvel.apply {
                 this.adapter = rvAdapter
                 //  this.layoutManager = lmanager
-                this.layoutManager = gmanager
+                this.layoutManager = lmanager
             }
 
 
@@ -168,7 +186,7 @@ class BlankFragment : Fragment() {
 
     private fun chargeDataRVDB() {
 
-        if (Metodos().isOnline(requireActivity())) {
+
 
 
             lifecycleScope.launch(Dispatchers.Main) {
@@ -176,7 +194,10 @@ class BlankFragment : Fragment() {
 
                 pokemonPetItems = withContext(Dispatchers.IO) {
 
-                    return@withContext PokemonPetLogicDB().getInitChars()
+                    return@withContext PokemonPetLogicDB().getAllPokemonPets().toMutableList()
+                }
+                if(pokemonPetItems.isEmpty()){
+                    Snackbar.make(binding.listView,"Favoritos vacio",Snackbar.LENGTH_SHORT).show()
                 }
                 rvAdapter.items = pokemonPetItems
 
@@ -185,23 +206,18 @@ class BlankFragment : Fragment() {
                 binding.rvMarvel.apply {
                     this.adapter = rvAdapter
                     //  this.layoutManager = lmanager
-                    this.layoutManager = gmanager
+                    this.layoutManager = lmanager
                 }
                 progressBar.visibility = View.GONE
 
 
-
             }
-        }
-        else{
-            Snackbar.make(
-                binding.card,"No hay coneccion",Snackbar.LENGTH_LONG).show()
 
-        }
 
 
     }
-    private fun chargeDataRVAPI(limit:Int,offset:Int) {
+
+    private fun chargeDataRVAPI(limit: Int, offset: Int) {
 
         if (Metodos().isOnline(requireActivity())) {
 
@@ -211,7 +227,10 @@ class BlankFragment : Fragment() {
 
                 pokemonPetItems = withContext(Dispatchers.IO) {
 
-                    return@withContext (PokemonPetLogic().getAllPokemonPets(limit,offset) as MutableList<PokemonPet>)
+                    return@withContext (PokemonPetLogic().getAllPokemonPets(
+                        limit,
+                        offset
+                    ) as MutableList<PokemonPet>)
                 }
                 rvAdapter.items = pokemonPetItems
 
@@ -220,21 +239,21 @@ class BlankFragment : Fragment() {
                 binding.rvMarvel.apply {
                     this.adapter = rvAdapter
                     //  this.layoutManager = lmanager
-                    this.layoutManager = gmanager
+                    this.layoutManager = lmanager
                 }
                 progressBar.visibility = View.GONE
 
 
-
             }
-        }
-        else{
+        } else {
             Snackbar.make(
-                binding.card,"No hay coneccion",Snackbar.LENGTH_LONG).show()
+                binding.card, "No hay coneccion", Snackbar.LENGTH_LONG
+            ).show()
 
         }
 
     }
+
     /*fun saveMarvelItem(item: MarvelHero):Boolean{
         lifecycleScope.launch(Dispatchers.Main){
             withContext(Dispatchers.IO){
@@ -243,6 +262,14 @@ class BlankFragment : Fragment() {
             }
         }
     }*/
+    private fun getDataStore() =
+        requireActivity().dataStore.data.map { prefs ->
+            UserDataStore(
+                name = prefs[stringPreferencesKey("usuario")].orEmpty(),
+                email = prefs[stringPreferencesKey("email")].orEmpty(),
+                session = prefs[stringPreferencesKey("session")].orEmpty()
+            )
+        }
 }
 
 

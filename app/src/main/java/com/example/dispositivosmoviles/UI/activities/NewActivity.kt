@@ -30,6 +30,9 @@ class NewActivity : AppCompatActivity() {
         iniciar()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
     fun iniciar() {
         var name:String=""
         intent.extras.let {

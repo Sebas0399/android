@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dispositivosmoviles.UI.activities.DetailsPokeItem
 import com.example.dispositivosmoviles.UI.adapters.MarvelAdapter
+import com.example.dispositivosmoviles.UI.adapters.PokemonAdapter
 import com.example.dispositivosmoviles.databinding.FragmentBlank2Binding
 import com.example.dispositivosmoviles.logic.MarveLogic.MarvelHeroLogic
+import com.example.dispositivosmoviles.logic.PokemonLogic.PokemonPetLogic
 import com.example.dispositivosmoviles.logic.data.MarvelHero
+import com.example.dispositivosmoviles.logic.data.PokemonPet
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,16 +34,16 @@ import kotlinx.coroutines.withContext
 class BlankFragment2 : Fragment() {
     private lateinit var binding: FragmentBlank2Binding
     private lateinit var lmanager: LinearLayoutManager
-    private var marvelCharacterItems: MutableList<MarvelHero> = mutableListOf<MarvelHero>()
+    private var pokemonPetItems: MutableList<PokemonPet> = mutableListOf()
     private lateinit var progressBar: ProgressBar
-    private lateinit var rvAdapter: MarvelAdapter
+    private var rvAdapter: PokemonAdapter = PokemonAdapter { sendPokeItems(it) }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding= FragmentBlank2Binding.inflate(layoutInflater,container,false)
-        lmanager =LinearLayoutManager(
+        binding = FragmentBlank2Binding.inflate(layoutInflater, container, false)
+        lmanager = LinearLayoutManager(
             requireActivity(), LinearLayoutManager.VERTICAL, false
         )
         binding.rvMarvel.addOnScrollListener(
@@ -51,80 +54,68 @@ class BlankFragment2 : Fragment() {
                         val v = lmanager.childCount
                         val p = lmanager.findFirstVisibleItemPosition()
                         val t = lmanager.itemCount
-                        Log.d("bur",v.toString())
-                        Log.d("bur",p.toString())
-                        Log.d("bur",t.toString())   }
+                    }
                 }
             }
-                )
+        )
         progressBar = binding.progressBar
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        binding.txtBucar.addTextChangedListener{filteredText->
-
-            Log.d("PROBANDO",filteredText.toString())
-            if(filteredText.toString().isNotEmpty()){
-                reset()
-                chargeDataRV(filteredText.toString())
-
-            }
-            else{
-                reset()
-            }
-//            val newItems= marvelCharacterItems.filter {
-//                    items->
-//                items.nombre.lowercase(). contains(filteredText.toString().lowercase())
-//
-//            }
-//
-
+        binding.btnBuscar.setOnClickListener{
+            chargeDataRV(binding.txtBucar.text.toString())
         }
     }
-    fun reset(){
-        marvelCharacterItems=mutableListOf<MarvelHero>()
-        rvAdapter.replaceListAdapter(marvelCharacterItems)
+    fun sendPokeItems(item: PokemonPet) {
+
+        val i = Intent(requireActivity(), DetailsPokeItem::class.java)
+        i.putExtra("name", item)
+        startActivity(i)
     }
+    fun reset() {
+        pokemonPetItems = mutableListOf<PokemonPet>()
+        rvAdapter.replaceListAdapter(pokemonPetItems)
+    }
+
     fun sendMarvelItems(item: MarvelHero) {
 
         val i = Intent(requireActivity(), DetailsPokeItem::class.java)
         i.putExtra("name", item)
         startActivity(i)
     }
-    private fun chargeDataRV(nombre:String) {
+
+    private fun chargeDataRV(nombre: String) {
 
 
         lifecycleScope.launch(Dispatchers.Main) {
             progressBar.visibility = View.VISIBLE
-            marvelCharacterItems= withContext(Dispatchers.IO){
-                return@withContext (MarvelHeroLogic().getAllHero (nombre,5)
+            pokemonPetItems = withContext(Dispatchers.IO) {
+                return@withContext listOf(PokemonPetLogic().getOnePokemon(nombre)
 
 
                 )
-            } as MutableList<MarvelHero>
-            if(marvelCharacterItems.size==0){
-                var f= Snackbar.make(binding.txtBucar, "No se encontro", Snackbar.LENGTH_LONG)
+            } as MutableList<PokemonPet>
+            if (pokemonPetItems.size == 0) {
+                var f = Snackbar.make(binding.txtBucar, "No se encontro", Snackbar.LENGTH_LONG)
 
                 f.show()
             }
-            rvAdapter.items =
-
-
-
-                MarvelHeroLogic().getAllHero(nombre ,5)
+            rvAdapter.items = listOf(PokemonPetLogic().getOnePokemon(nombre))
 
 
 
 
-            binding.rvMarvel.apply{
+
+
+
+            binding.rvMarvel.apply {
                 this.adapter = rvAdapter
                 //  this.layoutManager = lmanager
                 this.layoutManager = lmanager
             }
             progressBar.visibility = View.GONE
-
 
 
         }

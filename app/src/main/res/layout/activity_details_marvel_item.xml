@@ -36,6 +36,14 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="TextView" />
+
+        <ImageButton
+            android:id="@+id/btnFav"
+            android:layout_width="100dp"
+            android:layout_height="89dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/baseline_favorite_24" />
     </LinearLayout>
 
 

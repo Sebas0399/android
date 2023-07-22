@@ -11,6 +11,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class PokemonPetLogicDB {
+    suspend fun insertPokemonPetDB(item:PokemonPet){
+        var PokemonPetData=
+
+
+
+            PokemonPetDB(
+                item.id,
+                item.nombre,
+                item.tipos,
+                item.foto
+            )
+
+
+        DispositivosMoviles.getDbInstance().pokemonDao().insertOneCharacter(PokemonPetData)
+    }
     suspend fun getOnePokemon(name:String): PokemonPet {
         var m: PokemonPet = PokemonPet(0,"","","")
         var call= ApiConnection().getService(ApiConnection.TypeApi.Pokemon, PokemonEndPoint::class.java)
@@ -29,27 +44,7 @@ class PokemonPetLogicDB {
         return m
     }
 
-    suspend fun getAllPokemonPets(limit:Int,offset:Int):List<PokemonPet>{
-        val itemList= arrayListOf<PokemonPet>()
-        var call= ApiConnection().getService(ApiConnection.TypeApi.Pokemon, PokemonEndPoint::class.java)
-        if(call!=null){
-            var response=call.getAllPokemons(limit ,offset)
 
-            if(response.isSuccessful){
-                response.body()!!.results
-
-                    .forEach{
-
-                        val m=getOnePokemon(it.name)
-                        itemList.add(m)
-                    }
-            }
-            else{
-                Log.d("UCE",response.toString())
-            }
-        }
-        return itemList
-    }
     fun getTipo2(tipos:List<Type>):List<String>{
         var l= arrayListOf<String>()
         for(t in  tipos){
@@ -69,6 +64,7 @@ class PokemonPetLogicDB {
         val itemList= arrayListOf<PokemonPet>()
         val aux=(DispositivosMoviles.getDbInstance().pokemonDao().getAllCharacters())
         aux.forEach{
+            Log.d("UCE",it.nombre)
             itemList.add(
                 PokemonPet(
                     it.id,
