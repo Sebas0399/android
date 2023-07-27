@@ -1,0 +1,23 @@
+package com.example.dispositivosmoviles.data.utilities
+
+import android.content.Context
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.SettingsClient
+
+class MyLocationManager (val      context:Context
+){
+    init {
+
+    }
+    private lateinit var client:SettingsClient
+    private fun initVars(){
+        if(context!=null){
+            client=LocationServices.getSettingsClient(context!!)
+        }
+    }
+     fun getUserLocation(){
+        initVars()
+
+
+    }
+}
