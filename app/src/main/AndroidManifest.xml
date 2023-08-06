@@ -20,6 +20,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".UI.activities.CameraActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UI.activities.ProgressActivity"
+            android:exported="false" />
+        <activity
             android:name=".UI.activities.MainActivity"
             android:exported="false" />
         <activity
@@ -32,7 +38,7 @@
             android:name=".UI.activities.NewActivity"
             android:exported="false" />
         <activity
-            android:name=".UI.activities.CameraActivity"
+            android:name=".UI.activities.BiometricActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
