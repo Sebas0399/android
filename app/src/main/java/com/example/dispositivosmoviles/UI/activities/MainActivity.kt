@@ -10,6 +10,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.speech.RecognizerIntent
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,9 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import java.util.Locale
 import java.util.UUID
 
@@ -46,7 +50,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var locationCallback: LocationCallback
     private lateinit var client: SettingsClient
     private lateinit var locationSettingsRequest: LocationSettingsRequest
-
+    private val TAG = "UCE"
+    private lateinit var auth: FirebaseAuth
 
     private var currentLocation: Location? = null
 
@@ -67,8 +72,8 @@ class MainActivity : AppCompatActivity() {
                                 )
                             }
                         }
-                        addOnFailureListener {ex->
-                            if(ex is ResolvableApiException){
+                        addOnFailureListener { ex ->
+                            if (ex is ResolvableApiException) {
                                 ex.startResolutionForResult(
                                     this@MainActivity,
                                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED
@@ -147,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         locationRequest = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY, 1000
         ).build()
-
+        auth = Firebase.auth
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
@@ -168,8 +173,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        initClass()
 
+        initClass()
+        binding.btnIngresar.setOnClickListener {
+            auth(binding.txtCorreo.text.toString(), binding.editTextTextPassword.text.toString())
+        }
 
         binding.button2.setOnClickListener {
             locationContract.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -226,44 +234,93 @@ class MainActivity : AppCompatActivity() {
             speechToText.launch(intentSpeach)
         }
     }
+    private fun recovert(email: String){
+        auth.sendPasswordResetEmail(email).addOnCompleteListener {
+            task->
+            if(task.isSuccessful){
+                Toast.makeText(baseContext,"Correo enviado",Toast.LENGTH_SHORT)
+            }
+        }
+    }
 
+    private fun auth(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "createUserWithEmail:success")
+                    val user = auth.currentUser
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication successfull.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+    }
+    private fun singIn(email: String,password: String){
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithEmail:success")
+                    val user = auth.currentUser
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+    }
 
     private fun initClass() {
         Log.d("UCE", "Entrando al onStart")
-        binding.button.setOnClickListener {
-            if (UserValidation().validateLogin(
-                    binding.editTextTextEmailAddress.text.toString(),
-                    binding.editTextTextPassword.text.toString()
-                )
-            ) {
-                var intent = Intent(this, NewActivity::class.java)
-                try {
-                    startActivity(intent)
-                } catch (e: Exception) {
-                    Log.d("UCE", "fallo")
-                }
-            } else {
-                var f = Snackbar.make(
-                    binding.button,
-                    "Usuario y contraseña incorrectos",
-                    Snackbar.LENGTH_LONG
-                )
+        /*  binding.button.setOnClickListener {
+              if (UserValidation().validateLogin(
+                      binding.editTextTextEmailAddress.text.toString(),
+                      binding.editTextTextPassword.text.toString()
+                  )
+              ) {
+                  var intent = Intent(this, NewActivity::class.java)
+                  try {
+                      startActivity(intent)
+                  } catch (e: Exception) {
+                      Log.d("UCE", "fallo")
+                  }
+              } else {
+                  var f = Snackbar.make(
+                      binding.button,
+                      "Usuario y contraseña incorrectos",
+                      Snackbar.LENGTH_LONG
+                  )
 
-                f.show()
-            }
+                  f.show()
+              }
 
 
-            //  binding.buscar.text="hola hundo"
+              //  binding.buscar.text="hola hundo"
 
-            // boton1.text="Hola BB"
-            // botonBuscar.text="Buscadito"
-            // Toast.makeText(this, "Matenme", Toast.LENGTH_SHORT).show()
+              // boton1.text="Hola BB"
+              // botonBuscar.text="Buscadito"
+              // Toast.makeText(this, "Matenme", Toast.LENGTH_SHORT).show()
 
-            // var f= Snackbar.make(binding.button, "matenme x2", Snackbar.LENGTH_LONG)
+              // var f= Snackbar.make(binding.button, "matenme x2", Snackbar.LENGTH_LONG)
 
-            //f.show()
+              //f.show()
 
-        }
+          }*/
 
     }
 
@@ -279,8 +336,9 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
-    private fun test(){
-        var location=MyLocationManager(this)
+
+    private fun test() {
+        var location = MyLocationManager(this)
         location.getUserLocation()
     }
 }
